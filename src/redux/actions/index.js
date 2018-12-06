@@ -76,7 +76,6 @@ export const get_companies_list = () => async (dispatch, getState) => {
 export const get_dashboard_info = () => async (dispatch, getState) => {
   try {
     const state = getState();
-    alert(state.token);
     const { data } = await axios.get(dashboar_url, {
       headers: {
         'X-AUTH-PROTOKEN': state.token,

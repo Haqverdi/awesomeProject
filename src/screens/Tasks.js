@@ -89,11 +89,13 @@ class Tasks extends Component {
   }
 
   loadDashboard = async () => {
-    get_dashboard_info();
-    // try {
-    // } catch (error) {
-    //   alert(error);
-    // }
+    try {
+      if (this.props.dashboard == null) {
+        await this.props.get_dashboard_info();
+      }
+    } catch (error) {
+      alert(error);
+    }
   };
 
   render() {
