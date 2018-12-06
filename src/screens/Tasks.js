@@ -5,7 +5,19 @@ import Card from '../components/Card';
 import { Navigation } from 'react-native-navigation';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { get_personal_info } from '../redux/actions/index';
+import { get_dashboard_info } from '../redux/actions/index';
+
+const mapStateToProps = state => ({
+  token: state.token,
+  dashboardError: state.dashboardError,
+  dashboard: state.dashboard,
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    get_dashboard_info: () => dispatch(get_dashboard_info()),
+  };
+};
 
 class Tasks extends Component {
   constructor(props) {
@@ -19,7 +31,7 @@ class Tasks extends Component {
 
     Navigation.events().bindComponent(this);
     this.goToAddTaskPage = this.goToAddTaskPage.bind(this);
-    this.loadPersonalInfo = this.loadPersonalInfo.bind(this);
+    this.loadDashboard = this.loadDashboard.bind(this);
   }
 
   static propTypes = {
@@ -47,7 +59,7 @@ class Tasks extends Component {
 
   componentDidMount = async () => {
     this.updateState();
-    this.loadPersonalInfo();
+    this.loadDashboard();
   };
 
   goToAddTaskPage() {
@@ -76,24 +88,32 @@ class Tasks extends Component {
     }
   }
 
-  loadPersonalInfo = async () => {
-    try {
-      await this.props.get_personal_info();
-    } catch (error) {
-      alert(error);
-    }
+  loadDashboard = async () => {
+    get_dashboard_info();
+    // try {
+    // } catch (error) {
+    //   alert(error);
+    // }
   };
 
   render() {
-    const { personaInfo } = this.props;
     return (
       <Container style={styles.container}>
         <Content padder>
           {/* {this.state.tasks.map((el, index) => {
             return <Card key={index} task={el} />;
           })} */}
-          <TouchableOpacity onPress={this.loadPersonalInfo}>
-            <Text>Load Info</Text>
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <Text>
+              {this.props.dashboard != null
+                ? this.props.dashboard.defaults.currencies.main
+                : 'Not found'}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={this.loadDashboard}>
+            <View>
+              <Text>Load data</Text>
+            </View>
           </TouchableOpacity>
         </Content>
         {/* Fab */}
@@ -111,18 +131,6 @@ class Tasks extends Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  token: state.token,
-  personaInfo: state.personaInfo,
-  personaInfoError: state.personaInfoError,
-});
-
-const mapDispatchToProps = dispatch => {
-  return {
-    get_personal_info: () => dispatch(get_personal_info()),
-  };
-};
 
 export default connect(
   mapStateToProps,

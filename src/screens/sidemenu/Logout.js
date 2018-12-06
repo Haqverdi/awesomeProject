@@ -25,7 +25,9 @@ class Logout extends Component {
     return (
       <TouchableOpacity style={{ width: '100%' }}>
         <Button block danger onPress={this.handleLogout}>
-          <Text style={{ color: 'white', fontSize: 16 }}>Logout</Text>
+          <Text style={{ color: 'white', fontSize: 16 }}>
+            {this.props.text}
+          </Text>
         </Button>
       </TouchableOpacity>
     );

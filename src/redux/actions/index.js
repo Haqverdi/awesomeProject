@@ -5,14 +5,15 @@ import {
   GET_COMPANIES_LIST_ERROR,
   GET_PERSONAL_INFO_ERROR,
   GET_TOKEN_ERROR,
+  GET_DASHBOARD_INFO,
+  GET_DASHBOARD_INFO_ERROR,
 } from './types';
 
 import axios from 'axios';
 import qs from 'qs';
 
 const auth_url = 'http://apptest.prospecterp.com/app_dev.php/api/auth/';
-const companies_list_url =
-  'http://apptest.prospecterp.com/app_dev.php/companies/list';
+const companies_list_url = 'https://apptest.prospecterp.com/az/companies/list';
 const personal_info_url =
   'http://apptest.prospecterp.com/app_dev.php/c/my-company/company/person/info/';
 const dashboar_url =
@@ -56,6 +57,39 @@ export const get_personal_info = () => async (dispatch, getState) => {
   }
 };
 
+export const get_companies_list = () => async (dispatch, getState) => {
+  try {
+    const state = getState();
+    const { data } = await axios.get(companies_list_url, {
+      headers: {
+        'X-AUTH-PROTOKEN': state.token,
+      },
+    });
+    data.status == 'success'
+      ? dispatch(getCompaniesList(data.data))
+      : dispatch(getCompaniesListError('Error'));
+  } catch (error) {
+    dispatch(getCompaniesListError(error));
+  }
+};
+
+export const get_dashboard_info = () => async (dispatch, getState) => {
+  try {
+    const state = getState();
+    alert(state.token);
+    const { data } = await axios.get(dashboar_url, {
+      headers: {
+        'X-AUTH-PROTOKEN': state.token,
+      },
+    });
+    data.status == 'success'
+      ? dispatch(getDashboardInfo(data.data))
+      : dispatch(getDashboardInfoError(true));
+  } catch (error) {
+    dispatch(getDashboardInfoError(true));
+  }
+};
+
 // actions
 export const getToken = token => ({
   type: GET_TOKEN,
@@ -64,10 +98,10 @@ export const getToken = token => ({
 
 const getTokenError = error => ({
   type: GET_TOKEN_ERROR,
-  payload: false,
+  payload: error,
 });
 
-const getCompaniesList = data => ({
+export const getCompaniesList = data => ({
   type: GET_COMPANIES_LIST,
   payload: data,
 });
@@ -84,5 +118,15 @@ export const getPersonalInfo = data => ({
 
 const getPersonalInfoError = error => ({
   type: GET_PERSONAL_INFO_ERROR,
+  payload: error,
+});
+
+export const getDashboardInfo = data => ({
+  type: GET_DASHBOARD_INFO,
+  payload: data,
+});
+
+export const getDashboardInfoError = error => ({
+  type: GET_DASHBOARD_INFO_ERROR,
   payload: error,
 });

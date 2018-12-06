@@ -5,6 +5,8 @@ import {
   GET_COMPANIES_LIST_ERROR,
   GET_PERSONAL_INFO_ERROR,
   GET_TOKEN_ERROR,
+  GET_DASHBOARD_INFO,
+  GET_DASHBOARD_INFO_ERROR,
 } from '../actions/types';
 
 const initialState = {
@@ -13,7 +15,9 @@ const initialState = {
   personaInfo: {},
   personaInfoError: false,
   companies: [],
-  companiesError: {},
+  companiesError: false,
+  dashboard: null,
+  dashboardError: null,
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -35,9 +39,21 @@ const rootReducer = (state = initialState, action) => {
         personaInfo: { ...action.payload },
       };
     case GET_COMPANIES_LIST:
-      return { ...state, companies: action.payload };
+      return {
+        ...state,
+        companies: [...action.payload],
+        companiesError: false,
+      };
     case GET_COMPANIES_LIST_ERROR:
-      return { ...state, companiesError: action.payload };
+      return { ...state, companiesError: action.payload, companies: [] };
+    case GET_DASHBOARD_INFO:
+      return {
+        ...state,
+        dashboard: { ...action.payload },
+        dashboardError: false,
+      };
+    case GET_DASHBOARD_INFO_ERROR:
+      return { ...state, dashboard: null, dashboardError: true };
     default:
       return state;
   }

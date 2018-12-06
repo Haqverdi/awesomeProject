@@ -9,6 +9,7 @@ import Login from './screens/Login';
 import Logout from './screens/sidemenu/Logout';
 import SideBar from './screens/SideBar';
 import Profil from './components/Profil';
+import Companies from './components/Companies';
 
 export function registerScreens(Provider, store) {
   Navigation.registerComponentWithRedux('Init', () => Init, Provider, store);
@@ -45,4 +46,5 @@ export function registerScreens(Provider, store) {
     store
   );
   Navigation.registerComponent('Profil', () => Profil);
+  Navigation.registerComponent('Companies', () => Companies);
 }
