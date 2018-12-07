@@ -10,11 +10,16 @@ import {
 import { Icon } from 'native-base';
 import { goTasks, goLogin } from '../navigations';
 import { connect } from 'react-redux';
-import { getToken } from '../redux/actions/index';
+import { getToken, get_dashboard_info } from '../redux/actions/index';
+
+const mapStateToProps = state => ({
+  dashboard: state.dashboard,
+});
 
 const mapDispatchToProps = dispatch => {
   return {
     getToken: token => dispatch(getToken(token)),
+    get_dashboard_info: () => dispatch(get_dashboard_info()),
   };
 };
 
@@ -23,6 +28,7 @@ class Init extends Component {
     super(props);
     this.state = {
       animatedValue: new Animated.Value(0),
+      loading: true,
     };
     this.loadingAnimation = this.loadingAnimation.bind(this);
     // this.requestForWrite = this.requestForWrite.bind(this);
@@ -40,9 +46,10 @@ class Init extends Component {
       const token = await AsyncStorage.getItem('TOKEN');
       if (token !== null) {
         await this.props.getToken(token);
-        setTimeout(() => {
+        if (this.props.dashboard == null) {
+          await this.props.get_dashboard_info();
           goTasks();
-        }, 100);
+        }
       } else {
         goLogin();
       }
@@ -106,7 +113,7 @@ class Init extends Component {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Init);
 
