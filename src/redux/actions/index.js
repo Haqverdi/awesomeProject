@@ -89,6 +89,26 @@ export const get_dashboard_info = () => async (dispatch, getState) => {
   }
 };
 
+/** valyuta convert to selected currency */
+export const convert_dahsboard_currencies_to = currency => async (
+  dispatch,
+  getState
+) => {
+  try {
+    const state = getState();
+    const { data } = await axios.get(`${dashboar_url}?convertTo=${currency}`, {
+      headers: {
+        'X-AUTH-PROTOKEN': state.token,
+      },
+    });
+    data.status == 'success'
+      ? dispatch(getDashboardInfo(data.data))
+      : dispatch(getDashboardInfoError(true));
+  } catch (error) {
+    dispatch(getDashboardInfoError(true));
+  }
+};
+
 // actions
 export const getToken = token => ({
   type: GET_TOKEN,

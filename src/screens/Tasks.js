@@ -6,12 +6,16 @@ import {
   Text,
   RefreshControl,
 } from 'react-native';
-import { Container, Content, Fab, View, Icon, Picker, Form } from 'native-base';
+import { Container, Content, Fab, View, Icon } from 'native-base';
 import Card from '../components/Card';
 import { Navigation } from 'react-native-navigation';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { get_dashboard_info } from '../redux/actions/index';
+import { bindActionCreators } from 'redux';
+import {
+  get_dashboard_info,
+  convert_dahsboard_currencies_to,
+} from '../redux/actions/index';
 import CurrencyForm from '../components/CurrencyFrom';
 import CurrencyList from '../components/CurrencyList';
 
@@ -23,7 +27,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_dashboard_info: () => dispatch(get_dashboard_info()),
+    ...bindActionCreators(
+      { get_dashboard_info, convert_dahsboard_currencies_to },
+      dispatch
+    ),
   };
 };
 
@@ -116,7 +123,8 @@ class Tasks extends Component {
     });
   };
 
-  onValueChange(value) {
+  async onValueChange(value) {
+    await this.props.convert_dahsboard_currencies_to(value);
     this.setState({
       selected: value,
     });
@@ -141,24 +149,22 @@ class Tasks extends Component {
             />
           }
         >
+          <CurrencyList
+            data={this.props.dashboard}
+            currentCurrency={
+              this.props.dashboard.defaults.currencies.currencies[
+                this.state.selected
+              ]
+            }
+          />
           {/* {this.state.tasks.map((el, index) => {
             return <Card key={index} task={el} />;
           })} */}
-          <View
-            style={{ flex: 1, alignItems: 'center', backgroundColor: 'pink' }}
-          >
-            <Text>
-              {this.props.dashboard != null
-                ? this.props.dashboard.defaults.currencies.main
-                : 'Not found'}
-            </Text>
-          </View>
           <TouchableOpacity onPress={this.loadDashboard}>
             <View>
               <Text>Load data</Text>
             </View>
           </TouchableOpacity>
-          <CurrencyList />
           <View style={{ marginVertical: 40 }}>
             <Text>Load data</Text>
           </View>

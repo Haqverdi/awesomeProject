@@ -21,7 +21,10 @@ class Profil extends Component {
           {Object.keys(profil).map((el, index) => {
             return (
               <Text key={el + index}>
-                {el}: {profil[el] != null ? profil[el] : 'Teyin olunmuyub'}
+                {el}:
+                {profil[el] != null && typeof profil[el] != 'object'
+                  ? profil[el]
+                  : 'Teyin olunmuyub'}
               </Text>
             );
           })}
