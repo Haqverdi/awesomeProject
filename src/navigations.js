@@ -30,7 +30,7 @@ export const goTasks = () =>
                 },
                 leftButtons: [
                   {
-                    icon: require('./assets/menu.svg'),
+                    icon: require('./assets/menu.png'),
                     id: 'LeftMenuBtn',
                   },
                 ],
@@ -108,7 +108,7 @@ export const showExpenses = data =>
                 },
                 leftButtons: [
                   {
-                    icon: require('./assets/left-icon.svg'),
+                    icon: require('./assets/left-icon.png'),
                   },
                 ],
               },
@@ -147,7 +147,7 @@ export const showCustomModal = (componentName, headerTitle, data) =>
                 },
                 leftButtons: [
                   {
-                    icon: require('./assets/left-icon.svg'),
+                    icon: require('./assets/left-icon.png'),
                     color: 'white',
                   },
                 ],

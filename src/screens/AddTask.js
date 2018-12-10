@@ -50,7 +50,7 @@ class AddTask extends Component {
         ],
         leftButtons: [
           {
-            icon: require('../assets/left-icon.svg'),
+            icon: require('../assets/left-icon.png'),
           },
         ],
         title: {
