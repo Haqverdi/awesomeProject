@@ -12,9 +12,9 @@ import {
 const initialState = {
   token: '',
   tokenError: false,
-  personaInfo: {},
+  personaInfo: null,
   personaInfoError: false,
-  companies: [],
+  companies: null,
   companiesError: false,
   dashboard: null,
   dashboardError: null,

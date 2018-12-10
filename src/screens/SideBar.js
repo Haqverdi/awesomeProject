@@ -7,7 +7,7 @@ import Logout from './sidemenu/Logout';
 import LoadPersonalInfo from './sidemenu/LoadPersonalInfo';
 import { get_personal_info, get_companies_list } from '../redux/actions/index';
 import { Navigation } from 'react-native-navigation';
-import CompaniesListButton from './sidemenu/CompaniesListButton';
+import { showCustomModal } from '../navigations';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -26,7 +26,6 @@ class SideBar extends Component {
     super(props);
     Navigation.events().bindComponent(this);
     this.handleLoadInfo = this.handleLoadInfo.bind(this);
-    this.handleLoadCompaniesList = this.handleLoadCompaniesList.bind(this);
   }
 
   static propTypes = {
@@ -38,100 +37,13 @@ class SideBar extends Component {
 
   handleLoadInfo = async () => {
     try {
-      await this.props.get_personal_info();
-      Navigation.mergeOptions(this.props.componentId, {
-        sideMenu: {
-          left: {
-            visible: false,
-          },
-        },
-      });
-      Navigation.showModal({
-        stack: {
-          children: [
-            {
-              component: {
-                name: 'Profil',
-                id: 'Profil',
-                passProps: {
-                  profil: this.props.personaInfo,
-                },
-                options: {
-                  topBar: {
-                    background: {
-                      color: '#4CAC85',
-                    },
-                    title: {
-                      component: {
-                        name: 'Header',
-                        passProps: {
-                          title: 'Profil',
-                        },
-                        alignment: 'center',
-                      },
-                    },
-                    leftButtons: [
-                      {
-                        icon: require('../assets/left-icon.svg'),
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
-    } catch (error) {
-      alert(error);
-    }
-  };
-
-  handleLoadCompaniesList = async () => {
-    try {
-      await this.props.get_companies_list();
-      Navigation.mergeOptions(this.props.componentId, {
-        sideMenu: {
-          left: {
-            visible: false,
-          },
-        },
-      });
-      Navigation.showModal({
-        stack: {
-          children: [
-            {
-              component: {
-                name: 'Companies',
-                id: 'Companies',
-                passProps: {
-                  companies: this.props.companies,
-                },
-                options: {
-                  topBar: {
-                    background: {
-                      color: '#4CAC85',
-                    },
-                    title: {
-                      component: {
-                        name: 'Header',
-                        passProps: {
-                          title: 'Companies',
-                        },
-                        alignment: 'center',
-                      },
-                    },
-                    leftButtons: [
-                      {
-                        icon: require('../assets/left-icon.svg'),
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          ],
-        },
+      if (!this.props.personaInfo || !this.props.companies) {
+        await this.props.get_personal_info();
+        await this.props.get_companies_list();
+      }
+      showCustomModal('Profil', 'Profil', {
+        profil: this.props.personaInfo,
+        companies: this.props.companies,
       });
     } catch (error) {
       alert(error);
@@ -150,16 +62,7 @@ class SideBar extends Component {
               <Text style={styles.instructions}>There will be menu</Text>
             </ListItem>
             <ListItem>
-              <CompaniesListButton
-                text="Companies List"
-                LoadInfoFunc={this.handleLoadCompaniesList}
-              />
-            </ListItem>
-            <ListItem>
-              <LoadPersonalInfo
-                text="Profil"
-                LoadInfoFunc={this.handleLoadInfo}
-              />
+              <LoadPersonalInfo text="Profil" onClick={this.handleLoadInfo} />
             </ListItem>
             <ListItem>
               <Logout text="Logout" />

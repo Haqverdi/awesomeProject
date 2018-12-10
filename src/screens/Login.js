@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
@@ -9,62 +9,64 @@ import {
   AsyncStorage,
   TouchableOpacity,
   Modal,
-} from 'react-native';
-import { Icon, Button } from 'native-base';
+} from 'react-native'
+import { Icon, Button } from 'native-base'
 // import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { get_token } from '../redux/actions/index';
-import { goTasks } from '../navigations';
+import { connect } from 'react-redux'
+import { get_token, get_dashboard_info } from '../redux/actions/index'
+import { goTasks } from '../navigations'
 
 const mapStateToProps = state => ({
   token: state.token,
   tokenError: state.tokenError,
-});
+})
 
 const mapDispatchToProps = dispatch => {
   return {
     get_token: (email, password) => dispatch(get_token(email, password)),
-  };
-};
+    get_dashboard_info: () => dispatch(get_dashboard_info()),
+  }
+}
 
 class Login extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       email: '',
       password: '',
       modalVisible: false,
-    };
+    }
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleTextChange = this.handleTextChange.bind(this);
-    this.setModalVisible = this.setModalVisible.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleTextChange = this.handleTextChange.bind(this)
+    this.setModalVisible = this.setModalVisible.bind(this)
   }
 
   handleTextChange = (field, value) => {
     this.setState({
       [field]: value,
-    });
-  };
+    })
+  }
 
   setModalVisible(status) {
-    this.setState({ modalVisible: status });
+    this.setState({ modalVisible: status })
   }
 
   handleSubmit = async () => {
     try {
-      await this.props.get_token(this.state.email, this.state.password);
+      await this.props.get_token(this.state.email, this.state.password)
       if (this.props.tokenError) {
-        alert('Melumatlar yalnishdir, yeniden cehd edin.');
+        alert('Melumatlar yalnishdir, yeniden cehd edin.')
       } else {
-        await AsyncStorage.setItem('TOKEN', this.props.token);
-        goTasks();
+        await AsyncStorage.setItem('TOKEN', this.props.token)
+        await this.props.get_dashboard_info()
+        goTasks()
       }
     } catch (error) {
-      alert(error);
+      alert(error)
     }
-  };
+  }
 
   render() {
     return (
@@ -84,7 +86,7 @@ class Login extends Component {
                 returnKeyType="next"
                 autoCorrect={false}
                 onChangeText={text => {
-                  this.handleTextChange('email', text);
+                  this.handleTextChange('email', text)
                 }}
                 onSubmitEditing={() => this.refs.txtPassword.focus()}
               />
@@ -100,7 +102,7 @@ class Login extends Component {
                 secureTextEntry
                 autoCorrect={false}
                 onChangeText={text => {
-                  this.handleTextChange('password', text);
+                  this.handleTextChange('password', text)
                 }}
                 ref={'txtPassword'}
                 onSubmitEditing={this.props.onLogin}
@@ -112,7 +114,7 @@ class Login extends Component {
               <Text
                 style={formStyles.forgotPasswordText}
                 onPress={() => {
-                  this.setModalVisible(true);
+                  this.setModalVisible(true)
                 }}
               >
                 Forgot password
@@ -150,7 +152,7 @@ class Login extends Component {
                       margin: 20,
                     }}
                     onPress={() => {
-                      this.setModalVisible(!this.state.modalVisible);
+                      this.setModalVisible(!this.state.modalVisible)
                     }}
                   >
                     <Text style={{ textAlign: 'center' }}>Hide Modal</Text>
@@ -161,14 +163,14 @@ class Login extends Component {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    );
+    )
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login);
+)(Login)
 
 const styles = StyleSheet.create({
   container: {
@@ -178,7 +180,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#4CAC85',
   },
-});
+})
 
 const formStyles = StyleSheet.create({
   container: {
@@ -237,4 +239,4 @@ const formStyles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
   },
-});
+})

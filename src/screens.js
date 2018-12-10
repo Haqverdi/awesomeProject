@@ -10,6 +10,7 @@ import Logout from './screens/sidemenu/Logout';
 import SideBar from './screens/SideBar';
 import Profil from './components/Profil';
 import Companies from './components/Companies';
+import CurrencyListInner from './components/CurrencyListInner';
 
 export function registerScreens(Provider, store) {
   Navigation.registerComponentWithRedux('Init', () => Init, Provider, store);
@@ -47,4 +48,5 @@ export function registerScreens(Provider, store) {
   );
   Navigation.registerComponent('Profil', () => Profil);
   Navigation.registerComponent('Companies', () => Companies);
+  Navigation.registerComponent('CurrencyListInner', () => CurrencyListInner);
 }

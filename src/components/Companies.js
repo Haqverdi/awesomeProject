@@ -31,7 +31,7 @@ class Companies extends Component {
         <Text>Məlumat yoxdur.</Text>
       </View>
     );
-    return companies.length > 0 ? listOfCompanies : noInfo;
+    return companies ? listOfCompanies : noInfo;
   }
 }
 

@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  AsyncStorage,
-  TouchableOpacity,
-  Text,
-  RefreshControl,
-} from 'react-native';
+import { StyleSheet, RefreshControl } from 'react-native';
 import { Container, Content, Fab, View, Icon } from 'native-base';
 import Card from '../components/Card';
 import { Navigation } from 'react-native-navigation';
@@ -15,7 +9,10 @@ import { bindActionCreators } from 'redux';
 import {
   get_dashboard_info,
   convert_dahsboard_currencies_to,
+  get_personal_info,
+  get_companies_list,
 } from '../redux/actions/index';
+import { showExpenses } from '../navigations';
 import CurrencyForm from '../components/CurrencyFrom';
 import CurrencyList from '../components/CurrencyList';
 
@@ -23,12 +20,19 @@ const mapStateToProps = state => ({
   token: state.token,
   dashboardError: state.dashboardError,
   dashboard: state.dashboard,
+  personaInfo: state.personaInfo,
+  companies: state.companies,
 });
 
 const mapDispatchToProps = dispatch => {
   return {
     ...bindActionCreators(
-      { get_dashboard_info, convert_dahsboard_currencies_to },
+      {
+        get_dashboard_info,
+        convert_dahsboard_currencies_to,
+        get_personal_info,
+        get_companies_list,
+      },
       dispatch
     ),
   };
@@ -43,7 +47,10 @@ class Tasks extends Component {
       showToast: false,
       p_info: {},
       refreshing: false,
-      selected: this.props.dashboard.defaults.currencies.main,
+      selected:
+        this.props.dashboard !== null
+          ? this.props.dashboard.defaults.currencies.main
+          : 551,
     };
 
     Navigation.events().bindComponent(this);
@@ -57,28 +64,16 @@ class Tasks extends Component {
     componentId: PropTypes.string,
   };
 
-  componentDidAppear = async () => {
-    this.updateState();
-  };
-
-  updateState = async () => {
-    try {
-      const value = await AsyncStorage.getItem('TASKS');
-      if (value !== null) {
-        this.setState({
-          tasks: JSON.parse(value),
-        });
-      }
-    } catch (error) {
-      this.setState({
-        tasks: [],
-      });
-    }
-  };
-
-  componentDidMount = async () => {
-    this.updateState();
-  };
+  // componentDidMount = async () => {
+  //   if (!this.props.personaInfo || !this.props.companies) {
+  //     await this.props.get_personal_info();
+  //     await this.props.get_companies_list();
+  //   }
+  //   showCustomModal('Profil', 'Profil', {
+  //     profil: this.props.personaInfo,
+  //     companies: this.props.companies,
+  //   });
+  // };
 
   goToAddTaskPage() {
     Navigation.showModal({
@@ -116,8 +111,10 @@ class Tasks extends Component {
     }
   };
 
-  handleRefresh = () => {
-    this.loadDashboard();
+  handleRefresh = async () => {
+    await this.props.get_dashboard_info();
+    await this.props.get_companies_list();
+    await this.props.get_personal_info();
     this.setState({
       refreshing: false,
     });
@@ -156,33 +153,8 @@ class Tasks extends Component {
                 this.state.selected
               ]
             }
+            showExpenses={() => showExpenses(this.props.dashboard.expenses)}
           />
-          {/* {this.state.tasks.map((el, index) => {
-            return <Card key={index} task={el} />;
-          })} */}
-          <TouchableOpacity onPress={this.loadDashboard}>
-            <View>
-              <Text>Load data</Text>
-            </View>
-          </TouchableOpacity>
-          <View style={{ marginVertical: 40 }}>
-            <Text>Load data</Text>
-          </View>
-          <View style={{ marginVertical: 40 }}>
-            <Text>Load data</Text>
-          </View>
-          <View style={{ marginVertical: 40 }}>
-            <Text>Load data</Text>
-          </View>
-          <View style={{ marginVertical: 40 }}>
-            <Text>Load data</Text>
-          </View>
-          <View style={{ marginVertical: 40 }}>
-            <Text>Load data</Text>
-          </View>
-          <View style={{ marginVertical: 40 }}>
-            <Text>Load data</Text>
-          </View>
         </Content>
         {/* Fab */}
         <View>

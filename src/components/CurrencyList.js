@@ -6,7 +6,7 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 export default class CurrencyList extends PureComponent {
   render() {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={this.props.showExpenses}>
         <Card style={styles.cardContainer}>
           <CardItem header style={styles.header}>
             <Text style={styles.headerText}>Xərclər cədvəli</Text>

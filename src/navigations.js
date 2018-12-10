@@ -1,5 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
+/** Tasks page */
 export const goTasks = () =>
   Navigation.setRoot({
     root: {
@@ -49,6 +50,7 @@ export const goTasks = () =>
     },
   });
 
+/** Login Page */
 export const goLogin = () =>
   Navigation.setRoot({
     root: {
@@ -76,5 +78,83 @@ export const goLogin = () =>
           },
         ],
       },
+    },
+  });
+
+/** Xercler modal show */
+export const showExpenses = data =>
+  Navigation.showModal({
+    stack: {
+      children: [
+        {
+          component: {
+            name: 'CurrencyListInner',
+            passProps: {
+              data,
+            },
+            options: {
+              topBar: {
+                background: {
+                  color: '#4CAC85',
+                },
+                title: {
+                  component: {
+                    name: 'Header',
+                    passProps: {
+                      title: 'Xərclər cədvəli',
+                    },
+                    alignment: 'center',
+                  },
+                },
+                leftButtons: [
+                  {
+                    icon: require('./assets/left-icon.svg'),
+                  },
+                ],
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+
+/** selected modal show(from sidebar) */
+export const showCustomModal = (componentName, headerTitle, data) =>
+  Navigation.showModal({
+    stack: {
+      children: [
+        {
+          component: {
+            name: componentName,
+            id: componentName,
+            passProps: {
+              ...data,
+            },
+            options: {
+              topBar: {
+                background: {
+                  color: '#4CAC85',
+                },
+                title: {
+                  component: {
+                    name: 'Header',
+                    passProps: {
+                      title: headerTitle,
+                    },
+                    alignment: 'center',
+                  },
+                },
+                leftButtons: [
+                  {
+                    icon: require('./assets/left-icon.svg'),
+                    color: 'white',
+                  },
+                ],
+              },
+            },
+          },
+        },
+      ],
     },
   });

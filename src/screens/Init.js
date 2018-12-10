@@ -46,10 +46,8 @@ class Init extends Component {
       const token = await AsyncStorage.getItem('TOKEN');
       if (token !== null) {
         await this.props.getToken(token);
-        if (this.props.dashboard == null) {
-          await this.props.get_dashboard_info();
-          goTasks();
-        }
+        await this.props.get_dashboard_info();
+        goTasks();
       } else {
         goLogin();
       }

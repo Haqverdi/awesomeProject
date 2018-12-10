@@ -38,7 +38,7 @@ export const get_token = (email, password) => async dispatch => {
       ? dispatch(getToken(data.token))
       : dispatch(getTokenError(error));
   } catch (error) {
-    dispatch(getTokenError(error.response.data));
+    dispatch(getTokenError(error));
   }
 };
 
